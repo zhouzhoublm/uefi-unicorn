@@ -43,7 +43,7 @@
   #
   # UEFI Stack
   #
-  gArmPlatformTokenSpaceGuid.PcdCPUCoresStackBase|0xA7700000
+  gArmPlatformTokenSpaceGuid.PcdCPUCoresStackBase|0xA760D000
   gArmPlatformTokenSpaceGuid.PcdCPUCorePrimaryStackSize|0x40000
 
   #
@@ -131,7 +131,9 @@
   # Platforms/Xiaomi/unicorn is vendored in this repo: the Silicium-ACPI
   # submodule pin does not carry that platform, so a clean clone could not
   # resolve this module otherwise.
-  unicorn/AcpiTables.inf
+  # M2/M1 禁用：unicorn/AcpiTables.inf 引用的 AML 在 uefi-mondrian / Silicium-ACPI 里都不完整；
+  # UniXNU 不依赖 EFI_ACPI_TABLE_PROTOCOL，等补齐 aml 再打开。
+  # unicorn/AcpiTables.inf
 
 # K60 debug: ASSERT prints and continues (vendor EnvDxe ctor ASSERT, no RamPartitionDxe)
 [PcdsFixedAtBuild]

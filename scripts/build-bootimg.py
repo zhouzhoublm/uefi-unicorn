@@ -16,16 +16,20 @@ def main():
     parser.add_argument('--ramdisk', type=Path)
     parser.add_argument('--fd', type=Path)
     parser.add_argument('--output-dir', type=Path, default=root / 'out/pong/boot')
+    parser.add_argument('--config', default='Resources/Configs/pong.toml',
+                        help='board config toml (relative to the firmware repo)')
+    parser.add_argument('--dtb', default='Resources/DTBs/pong.dtb',
+                        help='device tree appended to the firmware (absolute or repo-relative)')
     args = parser.parse_args()
 
     sys.path.insert(0, str(args.unixnu_root / 'scripts'))
     from unixnu.bootimg import compile_shim
 
-    config = tomllib.loads((root / 'Resources/Configs/pong.toml').read_text())
+    config = tomllib.loads((root / args.config).read_text())
     base = config['uefi_fd']['base']
     size = config['uefi_fd']['size']
     fd = args.fd or root / 'out/Build/pongPkg/RELEASE_CLANGPDB/FV/SILICIUM_UEFI.fd'
-    dtb = root / 'Resources/DTBs/pong.dtb'
+    dtb = Path(args.dtb)
     output = args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=True)
     image = output / 'pong-unixnu-uefi.img'

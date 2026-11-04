@@ -103,7 +103,7 @@ READ_LOCK_STATUS   = TRUE
   # ACPI
   INF MdeModulePkg/Universal/Acpi/AcpiTableDxe/AcpiTableDxe.inf
   INF MdeModulePkg/Universal/Acpi/AcpiPlatformDxe/AcpiPlatformDxe.inf
-  INF RuleOverride = ACPITABLE unicorn/AcpiTables.inf
+  # 同上：INF RuleOverride = ACPITABLE unicorn/AcpiTables.inf
 
   # IORT DT
   INF QcomPkg/Drivers/IortDtDxe/IortDtDxe.inf
