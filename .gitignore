@@ -1,0 +1,22 @@
+# Local firmware products and input data are always generated or fetched.
+Build/
+out/
+Conf/
+.cache/
+*.log
+*.fd
+*.elf
+*.efi
+*.img
+*.ramdisk
+*.ipsw
+*.dmg
+*.cdr
+*.lzfse
+*.partial
+__pycache__/
+*.py[cod]
+
+# Local overrides must not be committed.
+local.toml
+unixnu.local.toml

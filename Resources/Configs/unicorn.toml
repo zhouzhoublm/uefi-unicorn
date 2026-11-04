@@ -1,0 +1,30 @@
+#
+# Boot Shim Configs
+#
+[boot_shim]
+requires_kernel_header = true
+
+#
+# UEFI FD Configs
+# TODO(unicorn): 下面 base/size 是 Redmi K60 的值（K60 把 FD 挪到 0xA7400000 是为了避开
+# ramoops 0xA7000000）。unicorn 必须按本机 /proc/iomem 选一段 3 MiB 的可用空洞，
+# 不能与 hyp / ramoops / XBL / TZ 保留区重叠，否则一引导即崩且无日志。
+#
+[uefi_fd]
+base = 0xA7400000
+size = 0x300000
+
+#
+# Android Boot Image Kernel Configs
+#
+[boot_image_kernel]
+kernel_compression = "gzip"
+append_dtb         = true
+
+#
+# Android Boot Image Configs
+# TODO(unicorn): v4 是 K60 的实测值；unicorn 以 `fastboot getvar all` 的
+# partition-size / header version 实测为准。
+#
+[boot_image]
+header_version = 4

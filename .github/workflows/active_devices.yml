@@ -1,0 +1,22 @@
+# Manual only: this fork tracks a single local device build; every push to main
+# used to trigger a full Mu-Silicium UEFI rebuild on hosted runners.
+name: Build UEFI for active devices
+on:
+  workflow_dispatch:
+
+env:
+  CI_BUILD: true
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build UEFI for active devices
+        run: bash ./setup_env.sh -p apt && bash ./build_active_devices.sh -r DEBUG
+
+      - name: Upload UEFI images
+        uses: actions/upload-artifact@v7
+        with:
+          name: uefi-images
+          path: ./Mu-*
+          compression-level: 9
