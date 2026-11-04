@@ -6,9 +6,10 @@ requires_kernel_header = true
 
 #
 # UEFI FD Configs
-# TODO(unicorn): 下面 base/size 是 Redmi K60 的值（K60 把 FD 挪到 0xA7400000 是为了避开
-# ramoops 0xA7000000）。unicorn 必须按本机 /proc/iomem 选一段 3 MiB 的可用空洞，
-# 不能与 hyp / ramoops / XBL / TZ 保留区重叠，否则一引导即崩且无日志。
+# 实测依据（本机 live device tree 的 reserved-memory + /proc/iomem）：
+#   ramoops@0xa7000000 + 0x400000  ->  reserved 到 0xa73fffff
+#   0xa7400000 不落在任何保留区内（脚本已校验），因此 FD 取 0xA7400000 长度 0x300000，
+#   从 0xA7400000 到 0xA76FFFFF，避开 ramoops / xbl_sc / global_sync。
 #
 [uefi_fd]
 base = 0xA7400000
@@ -23,8 +24,5 @@ append_dtb         = true
 
 #
 # Android Boot Image Configs
-# TODO(unicorn): v4 是 K60 的实测值；unicorn 以 `fastboot getvar all` 的
-# partition-size / header version 实测为准。
-#
 [boot_image]
 header_version = 4
