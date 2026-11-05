@@ -82,6 +82,11 @@ gMemoryDescriptor[] = {
   // "Kernel" above keeps 192 MiB as a reservation for XNU itself.
   {"DXE Heap",           0xC7000000, 0x18000000, AddMem, SYS_MEM  , SYS_MEM_CAP, Conv   , WRITE_BACK_XN},
 
+  // HIGH DRAM: 0xEA000000 以上到 12 GiB DRAM 末尾(0x380000000)原本完全没有描述，
+  // 所以 DarwinBoot 能找到的最大连续空闲段只有 ~306 MiB，XNU 窗口被卡在 288 MiB。
+  // 这里把这段高位 DRAM 描述成普通可用内存，给内核一个足够大的连续窗口。
+  {"HIGH DRAM",     0x00000000EA000000, 0x0000000296000000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv, WRITE_BACK_XN},
+
   // Other Memory Regions
   {"IMEM Base",          0x14680000, 0x0002A000, NoHob , MMAP_IO  , INITIALIZED, Conv   , NS_DEVICE},
   {"IMEM Cookie Base",   0x146AA000, 0x00016000, AddDev, MMAP_IO  , INITIALIZED, Conv   , NS_DEVICE},
