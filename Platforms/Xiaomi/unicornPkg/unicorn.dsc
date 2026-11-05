@@ -137,12 +137,14 @@
 
 # K60 debug: ASSERT prints and continues (vendor EnvDxe ctor ASSERT, no RamPartitionDxe)
 [PcdsFixedAtBuild]
-  gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0x03
+  gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0x02  # 打印开、断言关（DEBUG 固件也能稳定跑）
   # K60 bring-up: ERROR only. DEBUG_LOAD (0x4) makes DxeCore print one
   # "Loading driver at 0x... EntryPoint=0x..." line per image, which scrolls
   # the UniXNU ERROR lines off the screen. Turn 0x4 back on only while
   # locating a load-time fault.
-  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x80000000
+  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x80000002  # 只打印 ERROR|WARN：
+  # UniXNULog 与 DarwinBoot 的 Print 都用 ERROR 级，所以关键信息都在；
+  # 同时把 DXE core 的 POOL/PAGE/DISPATCH/INFO 刷屏挡掉。
   # K60 debug: UniXNU app logs (menu/payload) become ERROR so they
   # pass the global level and reach the Advanced Logger buffer.
   gUniXNUPkgTokenSpaceGuid.PcdUniXNUDebugLevel|0x80000000

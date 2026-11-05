@@ -19,9 +19,12 @@
 //   MemorySizeActual 0x478
 //   sizeof           0x480
 //
-// XNU 8796.141.3 / Darwin 22 pexpert/pexpert/arm64/boot.h ABI.
+// DARWIN 24 / XNU 11417.140.69 pexpert/pexpert/arm64/boot.h ABI:
+//   CommandLine 0x6c (1024 B), BootFlags 0x470, MemorySizeActual 0x478, sizeof 0x480.
+// 本移植（unicorn / ipados-18.7.10-22H374）用的就是 Darwin 24，所以这里取 1024 这组值；
+// 608/0x2e0 那组是 K60 跑 16.6.1(Darwin 22) 时的，留着会 EFI_BAD_BUFFER_SIZE 且 ABI 错位。
 //
-#define DARWIN_BOOT_LINE_LENGTH 608
+#define DARWIN_BOOT_LINE_LENGTH 1024
 typedef struct {
   UINT16  Revision;
   UINT16  Version;
@@ -44,8 +47,8 @@ typedef struct {
 STATIC_ASSERT (OFFSET_OF (DARWIN_BOOT_ARGS, DeviceTree) == 0x60, "DT ABI");
 STATIC_ASSERT (OFFSET_OF (DARWIN_BOOT_ARGS, Video) == 0x28, "video ABI");
 STATIC_ASSERT (OFFSET_OF (DARWIN_BOOT_ARGS, CommandLine) == 0x6c, "command line ABI");
-STATIC_ASSERT (OFFSET_OF (DARWIN_BOOT_ARGS, BootFlags) == 0x2d0, "flags ABI");
-STATIC_ASSERT (OFFSET_OF (DARWIN_BOOT_ARGS, MemorySizeActual) == 0x2d8, "memory ABI");
-STATIC_ASSERT (sizeof (DARWIN_BOOT_ARGS) == 0x2e0, "Darwin 22 boot_args ABI");
+STATIC_ASSERT (OFFSET_OF (DARWIN_BOOT_ARGS, BootFlags) == 0x470, "flags ABI");
+STATIC_ASSERT (OFFSET_OF (DARWIN_BOOT_ARGS, MemorySizeActual) == 0x478, "memory ABI");
+STATIC_ASSERT (sizeof (DARWIN_BOOT_ARGS) == 0x480, "Darwin 24 boot_args ABI");
 
 #endif

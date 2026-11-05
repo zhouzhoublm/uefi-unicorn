@@ -44,6 +44,44 @@ UINT64 EFIAPI DarwinCurrentEl (VOID);
 VOID EFIAPI DarwinEnter (UINT64 Args, UINT64 Entry, UINT64 Memory, UINT64 PopulatedBytes, UINT64 VideoBase, UINT64 VideoBytes);
 VOID EFIAPI DarwinEnterEnd (VOID);
 
+//
+// Keep the diagnostic frame on screen so it can be photographed. A key press
+// returns immediately; otherwise the frame stays for up to five minutes.
+//
+//
+// Wipe the console before drawing the failure frame: the DEBUG text stream would
+// otherwise scroll the one useful line off the screen.
+//
+STATIC
+VOID
+DiagClear (
+  VOID
+  )
+{
+  if ((gST != NULL) && (gST->ConOut != NULL)) {
+    gST->ConOut->Reset (gST->ConOut, FALSE);
+    gST->ConOut->ClearScreen (gST->ConOut);
+  }
+}
+
+STATIC
+VOID
+DiagHold (
+  VOID
+  )
+{
+  EFI_INPUT_KEY  Key;
+  UINTN          Index;
+
+  for (Index = 0; Index < 3000; Index++) {   // up to five minutes, or any key press
+    if ((gST->ConIn != NULL) && !EFI_ERROR (gST->ConIn->ReadKeyStroke (gST->ConIn, &Key))) {
+      break;
+    }
+
+    gBS->Stall (100000);
+  }
+}
+
 STATIC
 VOID
 FlushRange (UINT64 Base, UINT64 Bytes)
@@ -669,6 +707,9 @@ Boot (
   DiagDraw (L"DARWINBOOT REQUEST", 0);
   if ((Request->KextCount != 0) || (Request->DeviceTree != NULL) || (Request->DeviceTreeSize != 0) ||
       (DarwinCurrentEl () != 4)) {
+    DiagClear ();
+    DiagDraw (L"INPUTS OR EL REJECTED", 0);
+    DiagHold ();
     Print (L"DARWINBOOT: unsupported inputs or exception level; firmware retained\n");
     return EFI_UNSUPPORTED;
   }
@@ -897,7 +938,9 @@ Boot (
   return EFI_ABORTED;
 Fail:
   UnicodeSPrint (Failure, sizeof (Failure), L"BOOT FAILED %s %016lx", Stage, Status);
+  DiagClear ();
   DiagDraw (Failure, 0);
+  DiagHold ();
   if (Root != NULL) { Root->Close (Root); }
   if (Image != NULL) { FreePool (Image); }
   if (Tree != NULL) { FreePool (Tree); }
