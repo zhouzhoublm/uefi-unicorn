@@ -117,7 +117,7 @@
 [Components]
   UniXNUPkg/Application/UniXNU/UniXNU.inf
   UniXNUPkg/Driver/UniXNUDxe/UniXNUDxe.inf
-  DarwinBootPkg/Driver/DarwinBoot.inf
+  DarwinBoot22/Driver/DarwinBoot.inf
   UniXNUPkg/Driver/UniXNURamDiskDxe/UniXNURamDiskDxe.inf
   UniXNUPkg/Driver/AdvancedLogDxe/AdvancedLogDxe.inf
   unicornPkg/Drivers/AdvLogDxe/AdvLogDxe.inf
